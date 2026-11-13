@@ -9,6 +9,7 @@ from services.email_service import send_email
 from db import get_db_connection
 from utils.auth import role_required
 from flask import current_app
+from threading import Thread
 
 emergency_bp = Blueprint(
     "emergency", __name__, url_prefix="/api/emergency"
@@ -40,6 +41,20 @@ def distance_km(lat1, lon1, lat2, lon2):
     )
 
     return radius * 2 * atan2(sqrt(a), sqrt(max(0, 1 - a)))
+
+def send_emergency_emails(email_list, app):
+    with app.app_context():
+        for email_data in email_list:
+            try:
+                send_email(
+                    email_data["to"],
+                    email_data["subject"],
+                    email_data["message"]
+                )
+            except Exception:
+                current_app.logger.exception(
+                    "Emergency email delivery failed"
+                )
 
 
 @emergency_bp.route("/create", methods=["POST"])
@@ -242,25 +257,15 @@ def create_emergency():
 
         conn.commit()
 
-        emails_sent = 0
-        emails_failed = 0
+        
+        if pending_emails:
+            app = current_app._get_current_object()
 
-        for email_data in pending_emails:
-            try:
-                send_email(
-                    email_data["to"],
-                    email_data["subject"],
-                    email_data["message"]
-                )
-                emails_sent += 1
-            
-            except Exception as e:
-                emails_failed += 1
-                current_app.logger.error(
-                    "Emergency email delivery failed: %s: %s",
-                    type(e).__name__,
-                    str(e)
-                )
+            Thread(
+                target=send_emergency_emails,
+                args=(pending_emails.copy(), app),
+                daemon=True
+            ).start()
 
         return jsonify({
             "status": "success",
@@ -271,8 +276,7 @@ def create_emergency():
             "description": description,
             "matched_donors": len(matches),
             "matches": matches,
-            "emails_sent": emails_sent,
-            "emails_failed": emails_failed
+            "emails_queued": len(pending_emails)
         }), 201
 
 
