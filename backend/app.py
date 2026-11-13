@@ -120,7 +120,7 @@ def test_gmail_delivery():
     except Exception as e:
         app.logger.error(
             "Gmail API test failed: %s",
-            type(e).__name__
+            str(e)
         )
 
         return jsonify({
