@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSession, logoutUser } from "../services/auth";
 
-const BASE_URL = "http://127.0.0.1:5002/api/camps";
-const DONOR_URL = "http://127.0.0.1:5002/api/donors";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:5002";
+
+const BASE_URL = `${API_URL}/api/camps`;
+const DONOR_URL = `${API_URL}/api/donors`;
+
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const EMPTY_CAMP = {
   camp_name: "", description: "", camp_date: "", start_time: "",

@@ -1,3 +1,4 @@
+import os
 import secrets
 import hashlib
 from datetime import datetime, timedelta, timezone
@@ -206,10 +207,12 @@ def create_emergency():
 
             # Prepare email for delivery after database commit.
             if donor.get("email"):
-                response_link = (
-                    f"http://127.0.0.1:5002/api/donor-response/{token}"
-                )
+                backend_url = os.getenv(
+                    "BACKEND_URL",
+                    "http://127.0.0.1:5002"
+                ).rstrip("/")
 
+                response_link = f"{backend_url}/api/donor-response/{token}"
                 subject = f"RaktaSahay Emergency SOS - {blood_group}"
 
                 email_message = (

@@ -1,3 +1,4 @@
+import os
 import hashlib
 import secrets
 from datetime import timezone
@@ -146,9 +147,12 @@ def create_camp():
 
             # Prepare camp email for sending after commit.
             if donor.get("email"):
-                response_link = (
-                    f"http://127.0.0.1:5002/api/camps/respond/{token}"
-                )
+                backend_url = os.getenv(
+                    "BACKEND_URL",
+                    "http://127.0.0.1:5002"
+                ).rstrip("/")
+
+                response_link = f"{backend_url}/api/camps/respond/{token}"
 
                 subject = f"RaktaSahay Donation Camp - {camp_name}"
 

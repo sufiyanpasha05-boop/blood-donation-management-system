@@ -48,7 +48,7 @@ export default function DonorRegister() {
     try {
       // Use native fetch so the browser sets the multipart boundary automatically.
       // The API client supplies the configured base URL, but not its JSON headers.
-      const baseURL = (api.defaults.baseURL || "http://127.0.0.1:5002/api").replace(/\/$/, "");
+      const baseURL = api.defaults.baseURL.replace(/\/$/, "");
       const response = await fetch(`${baseURL}/donors/register`, {
         method: "POST",
         body: payload,
