@@ -8,6 +8,7 @@ from math import radians, sin, cos, sqrt, atan2
 from services.email_service import send_email
 from db import get_db_connection
 from utils.auth import role_required
+from flask import current_app
 
 emergency_bp = Blueprint(
     "emergency", __name__, url_prefix="/api/emergency"
@@ -252,9 +253,14 @@ def create_emergency():
                     email_data["message"]
                 )
                 emails_sent += 1
-            except Exception:
+            
+            except Exception as e:
                 emails_failed += 1
-
+                current_app.logger.error(
+                    "Emergency email delivery failed: %s: %s",
+                    type(e).__name__,
+                    str(e)
+                )
 
         return jsonify({
             "status": "success",
