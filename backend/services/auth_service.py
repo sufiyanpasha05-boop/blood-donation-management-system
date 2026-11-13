@@ -13,30 +13,59 @@ def verify_password(password, password_hash):
     return check_password_hash(password_hash, password)
 
 
-def register_user(role, full_name, email, phone, password):
+
+def register_user(role, full_name, email, phone, password,
+                  registration_no=None, address=None,
+                  latitude=None, longitude=None):
+
+    if role not in ("hospital", "blood_bank"):
+        raise ValueError("Invalid registration role")
+
+    if not all([
+        full_name, email, phone, password,
+        registration_no, address
+    ]):
+        raise ValueError("All required fields must be provided")
+
+    if len(password) < 12:
+        raise ValueError("Password must contain at least 12 characters")
+
+    if latitude is None or longitude is None:
+        raise ValueError("Location coordinates are required")
+
     password_hash = hash_password(password)
 
     user_id = create_user(
-        role,
-        full_name,
-        email,
-        phone,
-        password_hash
+        role=role,
+        full_name=full_name,
+        email=email,
+        phone=phone,
+        password_hash=password_hash,
+        registration_no=registration_no,
+        address=address,
+        latitude=latitude,
+        longitude=longitude
     )
 
     return user_id
 
+
 def login_user(login, password):
     user = get_user_by_email_or_phone(login)
 
+    # Check whether account exists
     if not user:
         return None, "Invalid email/phone or password"
 
-    if not user["is_active"]:
-        return None, "Account is inactive"
-
+    # Verify password
     if not verify_password(password, user["password_hash"]):
         return None, "Invalid email/phone or password"
+
+    # Check hospital and blood bank verification
+    if user["role"] in ["hospital", "blood_bank"]:
+
+        if user["verification_status"] != "Verified":
+            return None, "Account is not verified or is suspended"
 
     return user, None
 

@@ -1,0 +1,54 @@
+
+:root {
+  --rakta-red: #c8102e;
+  --rakta-teal: #008f8b;
+  --rakta-bg: #f7f8fa;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background-color: var(--rakta-bg);
+}
+
+.brand-name {
+  color: var(--rakta-red);
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #fff5f6, #ffffff, #eaf8f7);
+  min-height: 550px;
+  display: flex;
+  align-items: center;
+}
+
+.hero-logo {
+  max-width: 350px;
+  width: 100%;
+  height: auto;
+}
+
+.feature-card {
+  border-radius: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08) !important;
+}
+
+.feature-icon {
+  font-size: 42px;
+  color: var(--rakta-teal);
+}
+
+.btn-danger {
+  background-color: var(--rakta-red);
+  border-color: var(--rakta-red);
+}
+
+.btn-danger:hover {
+  background-color: #a30d25;
+  border-color: #a30d25;
+}

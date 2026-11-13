@@ -37,3 +37,24 @@ def token_required(f):
         return f(*args, **kwargs)
 
     return decorated
+
+
+def role_required(*allowed_roles):
+    def decorator(f):
+        @wraps(f)
+        @token_required
+        def decorated(*args, **kwargs):
+            current_user = g.current_user
+            user_role = current_user.get("role")
+
+            if user_role not in allowed_roles:
+                return jsonify({
+                    "status": "error",
+                    "message": "Access denied: insufficient permissions"
+                }), 403
+
+            return f(*args, **kwargs)
+
+        return decorated
+
+    return decorator

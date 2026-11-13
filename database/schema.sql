@@ -223,25 +223,3 @@ CREATE TABLE notifications (
         REFERENCES blood_bank(blood_bank_id)
         ON DELETE SET NULL
 );
-
-
--- 8. CHURN PREDICTION
-CREATE TABLE churn_prediction (
-    prediction_id INT AUTO_INCREMENT PRIMARY KEY,
-
-    donor_id INT NOT NULL,
-
-    churn_probability DECIMAL(5, 2) NOT NULL,
-
-    churn_status ENUM(
-        'Active',
-        'At Risk',
-        'Inactive'
-    ) NOT NULL,
-
-    prediction_date DATE NOT NULL,
-
-    FOREIGN KEY (donor_id)
-        REFERENCES donor(donor_id)
-        ON DELETE CASCADE
-);

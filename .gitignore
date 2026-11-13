@@ -1,4 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
 # Environment variables and secrets
 .env
 .env.*
 !.env.example
+
+# Node.js
+node_modules/
+dist/
+
+# Logs
+*.log
+
+# Local uploads and test files
+backend/uploads/
+backend/test_files/
+
+# Temporary deployment scripts
+backend/test_cloud_db.py
+backend/test_flask_cloud.py
+backend/import_cloud_schema.py
+backend/test_email.py
+
+# Local package files accidentally created in backend
+backend/package.json
+backend/package-lock.json
+backend/hash_seed_passwords.py
