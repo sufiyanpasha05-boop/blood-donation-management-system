@@ -94,3 +94,36 @@ if __name__ == "__main__":
         debug=os.getenv("FLASK_DEBUG", "false").lower() == "true",
         use_reloader=False
     )
+
+
+from flask import jsonify, g
+from utils.auth import role_required
+from gmail_service import send_gmail
+
+@app.route("/api/admin/test-gmail", methods=["POST"])
+@role_required("admin")
+def test_gmail_delivery():
+    try:
+        recipient = os.environ["SMTP_EMAIL"]
+
+        send_gmail(
+            recipient,
+            "RaktaSahay Render Gmail Test",
+            "This email was sent from the deployed Render backend."
+        )
+
+        return jsonify({
+            "status": "success",
+            "message": "Gmail API accepted the test email"
+        }), 200
+
+    except Exception as e:
+        app.logger.error(
+            "Gmail API test failed: %s",
+            type(e).__name__
+        )
+
+        return jsonify({
+            "status": "error",
+            "message": "Gmail API test failed"
+        }), 500
