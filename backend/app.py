@@ -60,6 +60,33 @@ def health():
         }), 500
 
 
+@app.route("/api/test-smtp", methods=["GET"])
+def test_smtp():
+    import os
+    import socket
+
+    host = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    port = int(os.getenv("SMTP_PORT", "587"))
+
+    try:
+        with socket.create_connection((host, port), timeout=5):
+            return {
+                "status": "success",
+                "message": "SMTP server is reachable"
+            }, 200
+
+    except Exception as e:
+        app.logger.error(
+            "SMTP connectivity test failed: %s",
+            type(e).__name__
+        )
+        return {
+            "status": "error",
+            "error_type": type(e).__name__,
+            "message": "SMTP connection failed"
+        }, 503
+
+
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
