@@ -1,4 +1,5 @@
 import os
+import ssl
 import pymysql
 import mysql.connector
 from dotenv import load_dotenv
@@ -27,13 +28,16 @@ class CloudConnection:
 
 def get_db_connection():
     if os.getenv("DB_PROVIDER", "local").lower() == "cloud":
+
+        ssl_context = ssl.create_default_context()
+
         connection = pymysql.connect(
             host=os.environ["DB_HOST"],
             port=int(os.getenv("DB_PORT", "3306")),
             user=os.environ["DB_USER"],
             password=os.environ["DB_PASSWORD"],
             database=os.environ["DB_NAME"],
-            ssl={"ssl": {}},
+            ssl=ssl_context,
             charset="utf8mb4",
             autocommit=False
         )
