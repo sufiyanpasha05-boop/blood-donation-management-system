@@ -129,11 +129,7 @@ function App() {
 
       <Route
         path="/donor/respond/:token"
-        element={
-          <h1 style={{ color: "red", padding: "50px" }}>
-            DONOR ROUTE WORKING
-          </h1>
-        }
+        element={<DonorResponse />}
       />
 
       {/* Admin Dashboard */}

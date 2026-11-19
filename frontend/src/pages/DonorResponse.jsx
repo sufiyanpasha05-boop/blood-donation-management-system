@@ -40,7 +40,6 @@ export default function DonorResponse() {
 
   return (
     <div className="container py-5" style={{ maxWidth: 600 }}>
-      <h1 style={{ color: "red" }}>DONOR RESPONSE PAGE LOADED</h1>
       <h2 className="text-danger fw-bold mb-4">
         RaktaSahay — Emergency Blood Request
       </h2>

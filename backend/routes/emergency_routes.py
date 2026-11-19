@@ -223,12 +223,12 @@ def create_emergency():
 
             # Prepare email for delivery after database commit.
             if donor.get("email"):
-                backend_url = os.getenv(
-                    "BACKEND_URL",
-                    "http://127.0.0.1:5002"
+                frontend_url = os.getenv(
+                    "FRONTEND_URL",
+                    "http://localhost:5173"
                 ).rstrip("/")
 
-                response_link = f"{backend_url}/api/donor-response/{token}"
+                response_link = f"{frontend_url}/donor/respond/{token}"
                 subject = f"RaktaSahay Emergency SOS - {blood_group}"
 
                 email_message = (
